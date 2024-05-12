@@ -123,6 +123,86 @@ public:
     }
 };
 
+//завдання 3
+
+class Triad1 {
+protected:
+    int a, b, c;
+public:
+    Triad1(int a, int b, int c) : a(a), b(b), c(c) {}
+    //конструктор копіювання
+    Triad1(const Triad1& other) : a(other.a), b(other.b), c(other.c) {}
+    // Конструктор перенесення
+    Triad1(Triad1&& other) noexcept : a(other.a), b(other.b), c(other.c) {}
+
+    void increase() {
+        a++;
+        b++;
+        c++;
+    }
+
+    void display() {
+        std::cout << a << ", " << b << ", " << c << std::endl;
+    }
+};
+
+class Date1 : public Triad1 {
+public:
+    Date1(int year, int month, int day) : Triad1(year, month, day) {}
+    //конструктор копіювання
+    Date1(const Date1& other) : Triad1(other) {}
+    // Конструктор перенесення
+    Date1(Date1&& other) noexcept : Triad1(std::move(other)) {}
+    void increase() {
+        if (b == 12 && c == 31) {
+            a++;
+            b = 1;
+            c = 1;
+        }
+        else if (c == 31) {
+            b++;
+            c = 1;
+        }
+        else {
+            c++;
+        }
+    }
+
+    void increaseBy(int days) {
+        for (int i = 0; i < days; ++i) {
+            increase();
+        }
+    }
+    void display() {
+        std::cout << a << "-" << b << "-" << c << std::endl;
+    }
+
+    Date1& operator=(const Date1& other) {
+        if (this != &other) {
+            a = other.a;
+            b = other.b;
+            c = other.c;
+        }
+        return *this;
+    }
+
+    Date1& operator=(Date1&& other) noexcept {
+        if (this != &other) {
+            a = std::move(other.a);
+            b = std::move(other.b);
+            c = std::move(other.c);
+        }
+        return *this;
+    }
+
+    bool operator==(const Date1& other) {
+        return a == other.a && b == other.b && c == other.c;
+    }
+
+    bool operator!=(const Date1& other) {
+        return !(*this == other);
+    }
+};
 
 void Task1() {
     // Приклад використання класів
@@ -160,6 +240,38 @@ void Task2() {
     date.display();
 }
 
+void Task3() {
+    Triad1 triad(1, 2, 3);
+    std::cout << "Triad before increase: ";
+    triad.display();
+    triad.increase();
+    std::cout << "Triad after increase: ";
+    triad.display();
+
+    Date1 date(2023, 12, 30);
+    std::cout << "Date before increase: ";
+    date.display();
+    date.increase();
+    std::cout << "Date after increase: ";
+    date.display();
+    date.increaseBy(5);
+    std::cout << "Date after increasing by 5 days: ";
+    date.display();
+
+    Date1 dateCopy = date;
+    std::cout << "Copied date: ";
+    dateCopy.display();
+    Date1 dateTransfer(2024, 1, 1);
+    dateTransfer = std::move(date);
+    std::cout << "Transferred date: ";
+    date.display();
+    std::cout << "Original date: ";
+    dateTransfer.display();
+
+    std::cout << "Dates are equal: " << (date == dateCopy) << std::endl;
+    std::cout << "Dates are not equal: " << (date != dateTransfer) << std::endl;
+
+}
 
 int main() {
     int choice;
