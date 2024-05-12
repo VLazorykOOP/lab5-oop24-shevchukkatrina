@@ -70,6 +70,60 @@ public:
     }
 };
 
+//завдання2
+
+class Triad {
+private:
+    int first, second, third;
+
+public:
+    Triad(int f, int s, int t) : first(f), second(s), third(t) {}
+
+    void increaseFieldsByOne() {
+        first++;
+        second++;
+        third++;
+    }
+    int getFirst() const { return first; }
+    int getSecond() const { return second; }
+    int getThird() const { return third; }
+
+
+    void display() {
+        std::cout << "Triad: (" << first << ", " << second << ", " << third << ")" << std::endl;
+    }
+};
+
+class Date {
+private:
+    int year, month, day;
+    Triad triad;
+
+public:
+    Date(int y, int m, int d) : year(y), month(m), day(d), triad(y, m, d) {}
+
+    void increaseFieldsByOne() {
+        triad.increaseFieldsByOne();
+        year = triad.getFirst();
+        month = triad.getSecond();
+        day = triad.getThird();
+    }
+
+    void increaseDateByPDays(int p) {
+        for (int i = 0; i < p; ++i) {
+            triad.increaseFieldsByOne();
+        }
+        year = triad.getFirst();
+        month = triad.getSecond();
+        day = triad.getThird();
+    }
+
+    void display() {
+        std::cout << "Date: " << year << "/" << month << "/" << day << std::endl;
+    }
+};
+
+
 void Task1() {
     // Приклад використання класів
     Triangle triangle(5, 5, 3);
@@ -91,6 +145,21 @@ void Task1() {
     equilateralTriangle.calculateAngles(angle1, angle2, angle3);
     cout << "Angles: " << angle1 << ", " << angle2 << ", " << angle3 << endl;
 }
+
+void Task2() {
+    Triad triad(1, 2, 3);
+    triad.display();
+    triad.increaseFieldsByOne();
+    triad.display();
+
+    Date date(2024, 5, 12);
+    date.display();
+    date.increaseFieldsByOne(); // Increase date by one day
+    date.display();
+    date.increaseDateByPDays(5); // Increase date by 5 days
+    date.display();
+}
+
 
 int main() {
     int choice;
